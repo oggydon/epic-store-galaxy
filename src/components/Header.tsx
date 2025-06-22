@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,7 @@ const Header = () => {
     { name: 'Store', href: '/' },
     { name: 'Library', href: '/library' },
     { name: 'Community', href: '/community' },
-    { name: 'Support', href: '/support' }
+    { name: 'Submit Game', href: '/contact' }
   ];
 
   return (
@@ -21,21 +22,21 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <div className="text-2xl font-bold bg-epic-gradient bg-clip-text text-transparent">
+            <Link to="/" className="text-2xl font-bold bg-epic-gradient bg-clip-text text-transparent">
               GameStore
-            </div>
+            </Link>
           </div>
 
           {/* Navigation - Desktop */}
           <nav className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className="nav-link"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -55,12 +56,16 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="hidden md:flex">
-              <User className="w-4 h-4 mr-2" />
-              Sign In
+            <Button variant="ghost" size="sm" className="hidden md:flex" asChild>
+              <Link to="/login">
+                <User className="w-4 h-4 mr-2" />
+                Sign In
+              </Link>
             </Button>
-            <Button size="sm" className="hidden md:flex epic-button">
-              Sign Up
+            <Button size="sm" className="hidden md:flex epic-button" asChild>
+              <Link to="/signup">
+                Sign Up
+              </Link>
             </Button>
 
             {/* Mobile Menu Button */}
@@ -94,24 +99,28 @@ const Header = () => {
               {/* Mobile Navigation */}
               <nav className="flex flex-col space-y-2">
                 {navItems.map((item) => (
-                  <a
+                  <Link
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     className="nav-link py-2"
                   >
                     {item.name}
-                  </a>
+                  </Link>
                 ))}
               </nav>
 
               {/* Mobile Auth Buttons */}
               <div className="flex flex-col space-y-2 pt-4 border-t border-epic-gray">
-                <Button variant="ghost" size="sm">
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">
+                    <User className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Link>
                 </Button>
-                <Button size="sm" className="epic-button">
-                  Sign Up
+                <Button size="sm" className="epic-button" asChild>
+                  <Link to="/signup">
+                    Sign Up
+                  </Link>
                 </Button>
               </div>
             </div>
