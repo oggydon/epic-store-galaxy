@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, User, Menu, X } from 'lucide-react';
+import { Search, User, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import CurrencySelector from './CurrencySelector';
+import { useUser } from '@/contexts/UserContext';
 
 const Header = () => {
+  const { user, logout, isAdmin, isModerator } = useUser();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -59,27 +61,46 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <CurrencySelector />
             
-            {/* Admin/Moderator Access */}
-            <div className="hidden md:flex items-center space-x-2">
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/admin">Admin</Link>
-              </Button>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/moderator">Moderator</Link>
-              </Button>
-            </div>
+            {/* Admin/Moderator Access - Only show for logged in admins/moderators */}
+            {user && (isAdmin || isModerator) && (
+              <div className="hidden md:flex items-center space-x-2">
+                {isAdmin && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/admin">Admin</Link>
+                  </Button>
+                )}
+                {isModerator && (
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/moderator">Moderator</Link>
+                  </Button>
+                )}
+              </div>
+            )}
 
-            <Button variant="ghost" size="sm" className="hidden md:flex" asChild>
-              <Link to="/login">
-                <User className="w-4 h-4 mr-2" />
-                Sign In
-              </Link>
-            </Button>
-            <Button size="sm" className="hidden md:flex epic-button" asChild>
-              <Link to="/signup">
-                Sign Up
-              </Link>
-            </Button>
+            {/* User Authentication */}
+            {user ? (
+              <div className="hidden md:flex items-center space-x-2">
+                <span className="text-gray-300 text-sm">Welcome, {user.username}</span>
+                <Button variant="ghost" size="sm" onClick={logout}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" className="hidden md:flex" asChild>
+                  <Link to="/login">
+                    <User className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Link>
+                </Button>
+                <Button size="sm" className="hidden md:flex epic-button" asChild>
+                  <Link to="/signup">
+                    Sign Up
+                  </Link>
+                </Button>
+              </>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -122,25 +143,39 @@ const Header = () => {
                 ))}
               </nav>
 
-              {/* Mobile Admin/Moderator Links */}
-              <div className="flex flex-col space-y-2 pt-2 border-t border-epic-gray">
-                <Link to="/admin" className="nav-link py-2">Admin Panel</Link>
-                <Link to="/moderator" className="nav-link py-2">Moderator Panel</Link>
-              </div>
+              {/* Mobile Admin/Moderator Links - Only show for logged in admins/moderators */}
+              {user && (isAdmin || isModerator) && (
+                <div className="flex flex-col space-y-2 pt-2 border-t border-epic-gray">
+                  {isAdmin && <Link to="/admin" className="nav-link py-2">Admin Panel</Link>}
+                  {isModerator && <Link to="/moderator" className="nav-link py-2">Moderator Panel</Link>}
+                </div>
+              )}
 
               {/* Mobile Auth Buttons */}
               <div className="flex flex-col space-y-2 pt-4 border-t border-epic-gray">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">
-                    <User className="w-4 h-4 mr-2" />
-                    Sign In
-                  </Link>
-                </Button>
-                <Button size="sm" className="epic-button" asChild>
-                  <Link to="/signup">
-                    Sign Up
-                  </Link>
-                </Button>
+                {user ? (
+                  <>
+                    <span className="text-gray-300 text-sm">Welcome, {user.username}</span>
+                    <Button variant="ghost" size="sm" onClick={logout}>
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link to="/login">
+                        <User className="w-4 h-4 mr-2" />
+                        Sign In
+                      </Link>
+                    </Button>
+                    <Button size="sm" className="epic-button" asChild>
+                      <Link to="/signup">
+                        Sign Up
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>

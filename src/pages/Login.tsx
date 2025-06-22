@@ -1,21 +1,31 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useUser } from '@/contexts/UserContext';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useUser();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', formData);
-    // TODO: Implement actual login logic
+    setError('');
+    
+    const success = login(formData.email, formData.password);
+    if (success) {
+      navigate('/');
+    } else {
+      setError('Invalid email or password');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,9 +42,21 @@ const Login = () => {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
             <p className="text-gray-400">Sign in to your GameStore account</p>
+            <div className="mt-4 text-sm text-gray-500">
+              <p>Demo accounts:</p>
+              <p>Admin: admin@example.com / admin123</p>
+              <p>Moderator: mod@example.com / mod123</p>
+              <p>User: user@example.com / user123</p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-2 rounded">
+                {error}
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
                 Email

@@ -1,30 +1,76 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Edit, Trash2, Users, Shield, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, Users, Shield, ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useUser } from '@/contexts/UserContext';
 
 const AdminPanel = () => {
+  const { isAdmin } = useUser();
   const [activeTab, setActiveTab] = useState('games');
 
-  // Mock data
-  const games = [
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-hero-gradient flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
+          <p className="text-gray-400 mb-6">You need admin privileges to access this page.</p>
+          <Button asChild>
+            <Link to="/">Back to Store</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Mock data with state management
+  const [games, setGames] = useState([
     { id: 1, title: "Cyber Strike 2077", status: "Active", downloads: 15000, price: "$29.99" },
     { id: 2, title: "Dragon Quest Legends", status: "Pending", downloads: 8500, price: "Free" },
-  ];
+  ]);
 
-  const users = [
+  const [users, setUsers] = useState([
     { id: 1, username: "gamer123", email: "gamer@example.com", role: "User", status: "Active" },
     { id: 2, username: "moderator1", email: "mod@example.com", role: "Moderator", status: "Active" },
-  ];
+  ]);
 
-  const pendingGames = [
-    { id: 1, title: "New Adventure Game", developer: "IndieStudio", uploadDate: "2024-01-20" },
+  const [pendingGames, setPendingGames] = useState([
+    { id: 1, title: "New Adventure Game", developer: "IndieStudio", uploadDate: "2024-01-20"  },
     { id: 2, title: "Puzzle Master", developer: "CasualGames", uploadDate: "2024-01-19" },
-  ];
+  ]);
+
+  const handleApproveGame = (gameId: number) => {
+    setPendingGames(prev => prev.filter(game => game.id !== gameId));
+    // Add to active games
+    const approvedGame = pendingGames.find(game => game.id === gameId);
+    if (approvedGame) {
+      setGames(prev => [...prev, {
+        id: Date.now(),
+        title: approvedGame.title,
+        status: "Active",
+        downloads: 0,
+        price: "Free"
+      }]);
+    }
+    console.log('Game approved:', gameId);
+  };
+
+  const handleRejectGame = (gameId: number) => {
+    setPendingGames(prev => prev.filter(game => game.id !== gameId));
+    console.log('Game rejected:', gameId);
+  };
+
+  const handleDeleteGame = (gameId: number) => {
+    setGames(prev => prev.filter(game => game.id !== gameId));
+    console.log('Game deleted:', gameId);
+  };
+
+  const handleDeleteUser = (userId: number) => {
+    setUsers(prev => prev.filter(user => user.id !== userId));
+    console.log('User deleted:', userId);
+  };
 
   return (
     <div className="min-h-screen bg-hero-gradient">
@@ -61,7 +107,7 @@ const AdminPanel = () => {
             onClick={() => setActiveTab('pending')}
           >
             <Shield className="w-4 h-4 mr-2" />
-            Pending Games
+            Pending Games ({pendingGames.length})
           </Button>
         </div>
 
@@ -104,7 +150,12 @@ const AdminPanel = () => {
                         <Button size="sm" variant="ghost">
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-red-400 hover:text-red-300"
+                          onClick={() => handleDeleteGame(game.id)}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -155,7 +206,12 @@ const AdminPanel = () => {
                         <Button size="sm" variant="ghost">
                           <Edit className="w-4 h-4" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-red-400 hover:text-red-300"
+                          onClick={() => handleDeleteUser(user.id)}
+                        >
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
@@ -191,10 +247,20 @@ const AdminPanel = () => {
                     <TableCell className="text-gray-300">{game.uploadDate}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                        <Button 
+                          size="sm" 
+                          className="bg-green-600 hover:bg-green-700"
+                          onClick={() => handleApproveGame(game.id)}
+                        >
+                          <CheckCircle className="w-4 h-4 mr-1" />
                           Approve
                         </Button>
-                        <Button size="sm" variant="destructive">
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          onClick={() => handleRejectGame(game.id)}
+                        >
+                          <XCircle className="w-4 h-4 mr-1" />
                           Reject
                         </Button>
                         <Button size="sm" variant="ghost">

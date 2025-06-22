@@ -5,11 +5,27 @@ import { Shield, Eye, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useUser } from '@/contexts/UserContext';
 
 const ModeratorPanel = () => {
+  const { isModerator } = useUser();
   const [activeTab, setActiveTab] = useState('pending');
 
-  const pendingGames = [
+  if (!isModerator) {
+    return (
+      <div className="min-h-screen bg-hero-gradient flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-white mb-4">Access Denied</h1>
+          <p className="text-gray-400 mb-6">You need moderator privileges to access this page.</p>
+          <Button asChild>
+            <Link to="/">Back to Store</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const [pendingGames, setPendingGames] = useState([
     {
       id: 1,
       title: "Space Adventure",
@@ -26,9 +42,9 @@ const ModeratorPanel = () => {
       status: "Pending Review",
       description: "Match-3 puzzle game with RPG elements."
     }
-  ];
+  ]);
 
-  const reviewedGames = [
+  const [reviewedGames, setReviewedGames] = useState([
     {
       id: 3,
       title: "Racing Thunder",
@@ -37,7 +53,48 @@ const ModeratorPanel = () => {
       status: "Approved",
       action: "Sent to Admin"
     }
-  ];
+  ]);
+
+  const handleApproveGame = (gameId: number) => {
+    const gameToApprove = pendingGames.find(game => game.id === gameId);
+    if (gameToApprove) {
+      // Move to reviewed games
+      setReviewedGames(prev => [...prev, {
+        id: gameToApprove.id,
+        title: gameToApprove.title,
+        developer: gameToApprove.developer,
+        reviewDate: new Date().toISOString().split('T')[0],
+        status: "Approved",
+        action: "Sent to Admin"
+      }]);
+      // Remove from pending
+      setPendingGames(prev => prev.filter(game => game.id !== gameId));
+      console.log('Game approved and sent to admin:', gameId);
+    }
+  };
+
+  const handleRejectGame = (gameId: number) => {
+    const gameToReject = pendingGames.find(game => game.id === gameId);
+    if (gameToReject) {
+      // Move to reviewed games
+      setReviewedGames(prev => [...prev, {
+        id: gameToReject.id,
+        title: gameToReject.title,
+        developer: gameToReject.developer,
+        reviewDate: new Date().toISOString().split('T')[0],
+        status: "Rejected",
+        action: "Rejected by Moderator"
+      }]);
+      // Remove from pending
+      setPendingGames(prev => prev.filter(game => game.id !== gameId));
+      console.log('Game rejected:', gameId);
+    }
+  };
+
+  const handleReviewGame = (gameId: number) => {
+    console.log('Reviewing game details:', gameId);
+    // In a real app, this would open a detailed review modal
+  };
 
   return (
     <div className="min-h-screen bg-hero-gradient">
@@ -61,7 +118,7 @@ const ModeratorPanel = () => {
             variant={activeTab === 'pending' ? 'default' : 'ghost'}
             onClick={() => setActiveTab('pending')}
           >
-            Pending Reviews
+            Pending Reviews ({pendingGames.length})
           </Button>
           <Button
             variant={activeTab === 'reviewed' ? 'default' : 'ghost'}
@@ -93,21 +150,40 @@ const ModeratorPanel = () => {
                   <p className="text-gray-300 mb-4">{game.description}</p>
 
                   <div className="flex gap-3">
-                    <Button size="sm" variant="ghost" className="text-blue-400 hover:text-blue-300">
+                    <Button 
+                      size="sm" 
+                      variant="ghost" 
+                      className="text-blue-400 hover:text-blue-300"
+                      onClick={() => handleReviewGame(game.id)}
+                    >
                       <Eye className="w-4 h-4 mr-2" />
                       Review Details
                     </Button>
-                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                    <Button 
+                      size="sm" 
+                      className="bg-green-600 hover:bg-green-700"
+                      onClick={() => handleApproveGame(game.id)}
+                    >
                       <CheckCircle className="w-4 h-4 mr-2" />
                       Approve & Send to Admin
                     </Button>
-                    <Button size="sm" variant="destructive">
+                    <Button 
+                      size="sm" 
+                      variant="destructive"
+                      onClick={() => handleRejectGame(game.id)}
+                    >
                       <XCircle className="w-4 h-4 mr-2" />
                       Reject
                     </Button>
                   </div>
                 </div>
               ))}
+
+              {pendingGames.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-gray-400">No games pending review</p>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -134,7 +210,11 @@ const ModeratorPanel = () => {
                     <TableCell className="text-gray-300">{game.developer}</TableCell>
                     <TableCell className="text-gray-300">{game.reviewDate}</TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 rounded-full text-xs bg-green-500/20 text-green-400">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        game.status === 'Approved' 
+                          ? 'bg-green-500/20 text-green-400' 
+                          : 'bg-red-500/20 text-red-400'
+                      }`}>
                         {game.status}
                       </span>
                     </TableCell>

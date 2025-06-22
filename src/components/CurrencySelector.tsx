@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const CurrencySelector = () => {
-  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+  const { selectedCurrency, setCurrency } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
 
   const currencies = [
@@ -20,10 +21,8 @@ const CurrencySelector = () => {
   const currentCurrency = currencies.find(c => c.code === selectedCurrency);
 
   const handleCurrencyChange = (currency: typeof currencies[0]) => {
-    setSelectedCurrency(currency.code);
+    setCurrency(currency.code);
     setIsOpen(false);
-    console.log('Currency changed to:', currency.code);
-    // Here you would typically update a global state or context
   };
 
   return (
