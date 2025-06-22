@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, User, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import CurrencySelector from './CurrencySelector';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,6 +57,18 @@ const Header = () => {
 
           {/* User Actions */}
           <div className="flex items-center space-x-4">
+            <CurrencySelector />
+            
+            {/* Admin/Moderator Access */}
+            <div className="hidden md:flex items-center space-x-2">
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/admin">Admin</Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/moderator">Moderator</Link>
+              </Button>
+            </div>
+
             <Button variant="ghost" size="sm" className="hidden md:flex" asChild>
               <Link to="/login">
                 <User className="w-4 h-4 mr-2" />
@@ -108,6 +121,12 @@ const Header = () => {
                   </Link>
                 ))}
               </nav>
+
+              {/* Mobile Admin/Moderator Links */}
+              <div className="flex flex-col space-y-2 pt-2 border-t border-epic-gray">
+                <Link to="/admin" className="nav-link py-2">Admin Panel</Link>
+                <Link to="/moderator" className="nav-link py-2">Moderator Panel</Link>
+              </div>
 
               {/* Mobile Auth Buttons */}
               <div className="flex flex-col space-y-2 pt-4 border-t border-epic-gray">

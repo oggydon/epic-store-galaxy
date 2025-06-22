@@ -9,6 +9,10 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import GameDetails from "./pages/GameDetails";
 import Contact from "./pages/Contact";
+import Library from "./pages/Library";
+import Community from "./pages/Community";
+import AdminPanel from "./pages/AdminPanel";
+import ModeratorPanel from "./pages/ModeratorPanel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/game/:id" element={<GameDetails />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/library" element={<Library />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/moderator" element={<ModeratorPanel />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
