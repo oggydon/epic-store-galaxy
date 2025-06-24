@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { UserProvider } from "@/contexts/UserContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import { LibraryProvider } from "@/contexts/LibraryContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -26,22 +27,24 @@ const App = () => (
       <BrowserRouter>
         <UserProvider>
           <CurrencyProvider>
-            <Toaster />
-            <Sonner />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/game/:id" element={<GameDetails />} />
-              <Route path="/purchase/:id" element={<Purchase />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/library" element={<Library />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/admin" element={<AdminPanel />} />
-              <Route path="/moderator" element={<ModeratorPanel />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <LibraryProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/game/:id" element={<GameDetails />} />
+                <Route path="/purchase/:id" element={<Purchase />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/library" element={<Library />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/moderator" element={<ModeratorPanel />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </LibraryProvider>
           </CurrencyProvider>
         </UserProvider>
       </BrowserRouter>
