@@ -6,12 +6,16 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
 import { useCurrency } from '@/contexts/CurrencyContext';
 import { useUser } from '@/contexts/UserContext';
+import { useLibrary } from '@/contexts/LibraryContext';
+import { useToast } from '@/hooks/use-toast';
 
 const Purchase = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { convertPrice } = useCurrency();
   const { isLoggedIn } = useUser();
+  const { addGameToLibrary } = useLibrary();
+  const { toast } = useToast();
   const [paymentMethod, setPaymentMethod] = useState<'qr' | 'upi'>('qr');
 
   // Mock game data - in real app, fetch based on ID
@@ -32,15 +36,29 @@ const Purchase = () => {
       return;
     }
 
+    // Add game to library
+    addGameToLibrary({
+      id: game.id,
+      title: game.title,
+      image: game.image,
+      purchaseDate: new Date().toISOString().split('T')[0],
+      price: game.price,
+      isFree: game.isFree
+    });
+
     if (game.isFree) {
-      // For free games, add to library directly
-      alert(`${game.title} has been added to your library!`);
-      navigate('/library');
+      toast({
+        title: "Game Added!",
+        description: `${game.title} has been added to your library!`,
+      });
     } else {
-      // For paid games, process payment
-      alert(`Payment of ${convertPrice(game.price)} processed successfully! ${game.title} added to your library.`);
-      navigate('/library');
+      toast({
+        title: "Purchase Successful!",
+        description: `Payment of ${convertPrice(game.price)} processed successfully! ${game.title} added to your library.`,
+      });
     }
+    
+    navigate('/library');
   };
 
   // Generate QR code data for UPI payment

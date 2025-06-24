@@ -5,29 +5,11 @@ import { Download, Star, Calendar, ArrowLeft, User } from 'lucide-react';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { useUser } from '@/contexts/UserContext';
+import { useLibrary } from '@/contexts/LibraryContext';
 
 const Library = () => {
   const { isLoggedIn } = useUser();
-
-  // Mock user's games data
-  const userGames = [
-    {
-      id: 1,
-      title: "Cyber Strike 2077",
-      image: "/placeholder.svg",
-      downloadDate: "2024-01-15",
-      rating: 4.8,
-      size: "2.3 GB"
-    },
-    {
-      id: 2,
-      title: "Dragon Quest Legends",
-      image: "/placeholder.svg",
-      downloadDate: "2024-01-10",
-      rating: 4.9,
-      size: "1.8 GB"
-    }
-  ];
+  const { purchasedGames } = useLibrary();
 
   // If not logged in, show login prompt
   if (!isLoggedIn) {
@@ -88,7 +70,7 @@ const Library = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {userGames.map((game) => (
+          {purchasedGames.map((game) => (
             <div key={game.id} className="game-card">
               <div className="relative aspect-video overflow-hidden">
                 <img
@@ -102,16 +84,12 @@ const Library = () => {
                 <h3 className="text-white font-semibold text-lg mb-2">{game.title}</h3>
                 
                 <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span>{game.rating}</span>
-                  </div>
-                  <span>{game.size}</span>
+                  <span>{game.isFree ? 'FREE' : `$${game.price}`}</span>
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
                   <Calendar className="w-4 h-4" />
-                  <span>Downloaded: {game.downloadDate}</span>
+                  <span>Added: {game.purchaseDate}</span>
                 </div>
 
                 <div className="flex gap-2">
@@ -130,7 +108,7 @@ const Library = () => {
           ))}
         </div>
 
-        {userGames.length === 0 && (
+        {purchasedGames.length === 0 && (
           <div className="text-center py-16">
             <h3 className="text-xl text-gray-400 mb-4">Your library is empty</h3>
             <p className="text-gray-500 mb-6">Start building your collection by downloading games from the store</p>
