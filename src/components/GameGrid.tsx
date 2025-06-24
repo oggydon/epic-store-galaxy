@@ -8,7 +8,7 @@ interface GameGridProps {
 }
 
 const GameGrid: React.FC<GameGridProps> = ({ searchQuery, filters }) => {
-  // Mock games data - in a real app, this would come from an API
+  // Extended mock games data with more variety and categories
   const games = [
     {
       id: 1,
@@ -68,6 +68,66 @@ const GameGrid: React.FC<GameGridProps> = ({ searchQuery, filters }) => {
       image: "/placeholder.svg",
       rating: 4.4,
       genre: "Strategy",
+      isFree: false
+    },
+    {
+      id: 7,
+      title: "Mystic Warriors",
+      price: 24.99,
+      originalPrice: 39.99,
+      image: "/placeholder.svg",
+      rating: 4.6,
+      genre: "Action",
+      isFree: false
+    },
+    {
+      id: 8,
+      title: "City Builder Pro",
+      price: 0,
+      originalPrice: 0,
+      image: "/placeholder.svg",
+      rating: 4.3,
+      genre: "Simulation",
+      isFree: true
+    },
+    {
+      id: 9,
+      title: "Horror Nights",
+      price: 15.99,
+      originalPrice: 25.99,
+      image: "/placeholder.svg",
+      rating: 4.2,
+      genre: "Horror",
+      isFree: false
+    },
+    {
+      id: 10,
+      title: "Battle Royale X",
+      price: 0,
+      originalPrice: 0,
+      image: "/placeholder.svg",
+      rating: 4.7,
+      genre: "Shooter",
+      isFree: true
+    },
+    {
+      id: 11,
+      title: "Fantasy Quest",
+      price: 34.99,
+      originalPrice: 49.99,
+      image: "/placeholder.svg",
+      rating: 4.8,
+      genre: "RPG",
+      isFree: false
+    },
+    {
+      id: 12,
+      title: "Indie Platformer",
+      price: 12.99,
+      originalPrice: 19.99,
+      image: "/placeholder.svg",
+      rating: 4.5,
+      genre: "Platformer",
       isFree: false
     }
   ];
