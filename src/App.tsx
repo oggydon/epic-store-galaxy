@@ -15,6 +15,7 @@ import Library from "./pages/Library";
 import Community from "./pages/Community";
 import AdminPanel from "./pages/AdminPanel";
 import ModeratorPanel from "./pages/ModeratorPanel";
+import Purchase from "./pages/Purchase";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/game/:id" element={<GameDetails />} />
+              <Route path="/purchase/:id" element={<Purchase />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/library" element={<Library />} />
               <Route path="/community" element={<Community />} />

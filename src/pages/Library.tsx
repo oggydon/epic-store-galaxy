@@ -1,11 +1,14 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Download, Star, Calendar, ArrowLeft } from 'lucide-react';
+import { Download, Star, Calendar, ArrowLeft, User } from 'lucide-react';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
+import { useUser } from '@/contexts/UserContext';
 
 const Library = () => {
+  const { isLoggedIn } = useUser();
+
   // Mock user's games data
   const userGames = [
     {
@@ -25,6 +28,49 @@ const Library = () => {
       size: "1.8 GB"
     }
   ];
+
+  // If not logged in, show login prompt
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-hero-gradient">
+        <Header />
+        
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center gap-4 mb-8">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Store
+              </Link>
+            </Button>
+            <h1 className="text-3xl font-bold text-white">My Library</h1>
+          </div>
+
+          <div className="max-w-md mx-auto text-center py-16">
+            <div className="bg-card rounded-xl p-8 border border-epic-gray">
+              <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-4">Login Required</h2>
+              <p className="text-gray-400 mb-6">
+                You need to login to access your game library. Sign in to view your purchased and downloaded games.
+              </p>
+              <div className="space-y-3">
+                <Button className="w-full epic-button" asChild>
+                  <Link to="/login">
+                    Sign In to View Library
+                  </Link>
+                </Button>
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/signup">
+                    Create New Account
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-hero-gradient">

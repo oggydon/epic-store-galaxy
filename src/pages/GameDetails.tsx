@@ -1,34 +1,90 @@
 
 import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Download, Star, Calendar, Users, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/Header';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 const GameDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { convertPrice } = useCurrency();
 
-  // Mock game data - in real app, fetch based on ID
-  const game = {
-    id: parseInt(id || '1'),
-    title: "Cyber Legends",
-    description: "An epic cyberpunk adventure with stunning visuals and immersive gameplay that takes you into a futuristic world of endless possibilities. Experience cutting-edge graphics, deep storylines, and intense combat mechanics.",
-    longDescription: "Cyber Legends is a revolutionary action RPG that pushes the boundaries of mobile gaming. Set in the year 2087, you play as a cyber-enhanced mercenary navigating the neon-lit streets of Neo Tokyo. With over 50 hours of gameplay, multiple story paths, and endless customization options, this game offers an unprecedented gaming experience on mobile devices.",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ],
-    price: "Free",
-    genre: "Action RPG",
-    rating: 4.8,
-    downloads: 125000,
-    releaseDate: "2024-01-15",
-    developer: "CyberStudio Games",
-    size: "2.5 GB",
-    version: "1.4.2",
-    requirements: "Android 8.0+, 4GB RAM"
+  // Mock games data with proper details for each game
+  const games = [
+    {
+      id: 1,
+      title: "Cyber Strike 2077",
+      description: "An epic cyberpunk adventure with stunning visuals and immersive gameplay.",
+      longDescription: "Cyber Strike 2077 is a revolutionary action RPG that pushes the boundaries of gaming. Set in the year 2087, you play as a cyber-enhanced mercenary navigating the neon-lit streets of Neo Tokyo.",
+      image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      screenshots: [
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      price: 29.99,
+      genre: "Action RPG",
+      rating: 4.8,
+      downloads: 125000,
+      releaseDate: "2024-01-15",
+      developer: "CyberStudio Games",
+      size: "2.5 GB",
+      version: "1.4.2",
+      requirements: "Android 8.0+, 4GB RAM",
+      isFree: false
+    },
+    {
+      id: 2,
+      title: "Dragon Quest Legends",
+      description: "A magical RPG adventure with dragons, quests, and legendary heroes.",
+      longDescription: "Embark on an epic journey through mystical lands filled with dragons, magic, and ancient legends. Dragon Quest Legends offers over 40 hours of immersive gameplay.",
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      screenshots: [
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      price: 0,
+      genre: "Fantasy RPG",
+      rating: 4.9,
+      downloads: 500000,
+      releaseDate: "2024-02-01",
+      developer: "Fantasy Studios",
+      size: "1.8 GB",
+      version: "2.1.0",
+      requirements: "Android 7.0+, 3GB RAM",
+      isFree: true
+    },
+    {
+      id: 3,
+      title: "Racing Thunder",
+      description: "High-speed racing action with customizable cars and intense competitions.",
+      longDescription: "Experience the thrill of high-speed racing with Racing Thunder. Customize your dream car and compete in various racing modes.",
+      image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      screenshots: [
+        "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+      ],
+      price: 19.99,
+      genre: "Racing",
+      rating: 4.6,
+      downloads: 200000,
+      releaseDate: "2024-01-20",
+      developer: "Speed Games",
+      size: "3.2 GB",
+      version: "1.2.5",
+      requirements: "Android 8.0+, 4GB RAM",
+      isFree: false
+    }
+  ];
+
+  const game = games.find(g => g.id === parseInt(id || '1')) || games[0];
+
+  const handlePurchase = () => {
+    navigate(`/purchase/${game.id}`);
   };
 
   return (
@@ -75,9 +131,9 @@ const GameDetails = () => {
                   <p className="text-gray-300 mb-6">{game.description}</p>
 
                   <div className="flex gap-4">
-                    <Button className="epic-button flex-1 md:flex-none">
+                    <Button className="epic-button flex-1 md:flex-none" onClick={handlePurchase}>
                       <Download className="w-5 h-5 mr-2" />
-                      {game.price === "Free" ? "Download Free" : `Buy ${game.price}`}
+                      {game.isFree ? "Download Free" : `Buy ${convertPrice(game.price)}`}
                     </Button>
                     <Button variant="outline" className="border-white text-white hover:bg-white hover:text-black">
                       Add to Wishlist
@@ -133,7 +189,9 @@ const GameDetails = () => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Price</span>
-                  <span className="text-epic-accent font-bold text-lg">{game.price}</span>
+                  <span className="text-epic-accent font-bold text-lg">
+                    {game.isFree ? "FREE" : convertPrice(game.price)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -142,19 +200,21 @@ const GameDetails = () => {
             <div className="bg-card rounded-xl p-6 border border-epic-gray">
               <h3 className="text-lg font-bold text-white mb-4">You Might Also Like</h3>
               <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex gap-3">
+                {games.filter(g => g.id !== game.id).slice(0, 3).map((relatedGame) => (
+                  <Link key={relatedGame.id} to={`/game/${relatedGame.id}`} className="flex gap-3 hover:bg-epic-gray p-2 rounded transition-colors">
                     <img
-                      src={`https://images.unsplash.com/photo-151${8 + i}709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80`}
-                      alt={`Related game ${i}`}
+                      src={relatedGame.image}
+                      alt={relatedGame.title}
                       className="w-16 h-16 object-cover rounded"
                     />
                     <div className="flex-1">
-                      <h4 className="text-white font-medium text-sm">Game Title {i}</h4>
-                      <p className="text-gray-400 text-xs">Action RPG</p>
-                      <p className="text-epic-accent text-sm font-bold">Free</p>
+                      <h4 className="text-white font-medium text-sm">{relatedGame.title}</h4>
+                      <p className="text-gray-400 text-xs">{relatedGame.genre}</p>
+                      <p className="text-epic-accent text-sm font-bold">
+                        {relatedGame.isFree ? "FREE" : convertPrice(relatedGame.price)}
+                      </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

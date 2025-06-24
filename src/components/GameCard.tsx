@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCurrency } from '@/contexts/CurrencyContext';
@@ -22,6 +22,13 @@ interface GameCardProps {
 
 const GameCard: React.FC<GameCardProps> = ({ game }) => {
   const { convertPrice } = useCurrency();
+  const navigate = useNavigate();
+
+  const handlePurchaseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/purchase/${game.id}`);
+  };
 
   return (
     <div className="game-card group">
@@ -71,7 +78,7 @@ const GameCard: React.FC<GameCardProps> = ({ game }) => {
                 </>
               )}
             </div>
-            <Button size="sm" className="epic-button">
+            <Button size="sm" className="epic-button" onClick={handlePurchaseClick}>
               <Download className="w-4 h-4 mr-1" />
               {game.isFree ? 'Get' : 'Buy'}
             </Button>
